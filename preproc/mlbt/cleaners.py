@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
-from decorators import cleaner
+from mlbt import config
+from .decorators import cleaner
 
 
 @cleaner
