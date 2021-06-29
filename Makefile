@@ -1,16 +1,10 @@
 # directories
 MDB_DATA := "s3://3di-data-mdb"
 MDB_RAW := $(MDB_DATA)/raw/mdb_000.csv
-MDB_CLEAN := $(MDB_DATA)/clean/mdb_000.parquet
+MDB_CLEAN := $(MDB_DATA)/panel/mdb_000.parquet
+
+tmp := $$( aws s3 ls s3://3di-data-mdb/clean/ --profile 'tracker-fgu' )
 
 .PHONY: mdb
-# .DELETE_ON_ERROR: $(MDB_CLEAN)
-
 mdb:
-	echo "hello"
-
-# mdb: $(MDB_CLEAN)
-
-# $(MDB_CLEAN): $(MDB_RAW)
-	# @python preproc/make_data.py $^
-	echo $^
+	@python preproc/make_data.py $(MDB_RAW) $(MDB_CLEAN)

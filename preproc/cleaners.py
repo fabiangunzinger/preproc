@@ -12,7 +12,7 @@ def add_variables(df):
     return df
 
 
-@cleaner
+# @cleaner
 def drop_last_month(df):
     """Drop last month, which might have missing data.
     For first month, Jan 2012, we have complete data.
@@ -21,14 +21,14 @@ def drop_last_month(df):
     return df[ym < ym.max()]
 
 
-@cleaner
+# @cleaner
 def clean_gender(df):
     """Categorise 'u' as missing."""
     df['gender'] = df.gender.str.replace('u', '')
     return df
 
 
-@cleaner
+# @cleaner
 def clean_tags(df):
     """Replace parenthesis with dash for save regex searches."""
     for tag in ['up_tag', 'auto_tag', 'manual_tag']:
@@ -36,15 +36,7 @@ def clean_tags(df):
     return df
 
 
-def drop_duplicate_accounts(df):
-    pass
-
-
-def drop_business_accounts(df):
-    pass
-
-
-@cleaner
+# @cleaner
 def correct_up_tag(df):
     """Set up_tag equal to manual_tag if it exists and auto_tag otherwise.
     This is how up_tag is supposed to behave but doesn't always.
@@ -54,14 +46,14 @@ def correct_up_tag(df):
     return df
 
 
-@cleaner
+# @cleaner
 def add_tag(df):
     """Create empty corrected tag variable."""
     df['tag'] = None
     return df
 
 
-@cleaner
+# @cleaner
 def tag_pmt_pairs(df, knn=5):
     """Tag payments from one account to another as transfers.
 
@@ -105,7 +97,7 @@ def tag_pmt_pairs(df, knn=5):
     return df
 
 
-@cleaner
+# @cleaner
 def tag_transfers(df):
     """Tag txns with description indicating tranfser payment."""
     tfr_strings = [' ft', ' trf', 'xfer', 'transfer']
@@ -116,7 +108,7 @@ def tag_transfers(df):
     return df
 
 
-@cleaner
+# @cleaner
 def drop_untagged(df):
     """Drop untagged transactions."""
     mask = (df.up_tag.eq('no tag')
@@ -125,7 +117,7 @@ def drop_untagged(df):
     return df[~mask]
 
 
-@cleaner
+# @cleaner
 def tag_incomes(df):
     """Tag earnings, pensions, benefits, and other income.
     Based on Appendix A in Haciouglu et al. (2020).
@@ -172,7 +164,7 @@ def tag_incomes(df):
     return df
 
 
-@cleaner
+# @cleaner
 def tag_corrections(df):
     """Correct or consolidate tag variable."""
     new_tags = {
@@ -185,14 +177,14 @@ def tag_corrections(df):
     return df
 
 
-@cleaner
+# @cleaner
 def fill_tag(df):
     """Replace tag with up_tag if missing ."""
     df['tag'] = np.where(df.tag.isna(), df.up_tag, df.tag)
     return df
 
 
-@cleaner
+# @cleaner
 def drop_card_repayments(df):
     """Drop card repayment transactions from current accounts."""
     tags = ['credit card repayment', 'credit card payment', 'credit card']
@@ -201,7 +193,7 @@ def drop_card_repayments(df):
     return df[~mask]
 
 
-@cleaner
+# @cleaner
 def sign_amount(df):
     """Make credits negative."""
     credit = df.credit_debit.values == 'credit'
@@ -209,7 +201,7 @@ def sign_amount(df):
     return df
 
 
-@cleaner
+# @cleaner
 def str_to_cat(df):
     """Convert string columns to categoricals for efficient storage."""
     strs = df.select_dtypes('object')
@@ -217,7 +209,7 @@ def str_to_cat(df):
     return df
 
 
-@cleaner
+# @cleaner
 def order_salaries(df):
     """Turn salary range into ordered variable."""
     cats = ['< 10k', '10k to 20k', '20k to 30k',
@@ -228,7 +220,7 @@ def order_salaries(df):
     return df
 
 
-@cleaner
+# @cleaner
 def drop_unneeded_vars(df):
     """Drop unneeded variables."""
     # vars = ['auto_tag', 'manual_tag', 'up_tag']
@@ -237,7 +229,7 @@ def drop_unneeded_vars(df):
     return df.drop(columns=vars)
 
 
-@cleaner
+# @cleaner
 def order_columns(df):
     first = [
         'user_id', 'transaction_date', 'amount',
@@ -248,6 +240,6 @@ def order_columns(df):
     return df[ordered]
 
 
-@cleaner
+# @cleaner
 def sort_rows(df):
     return df.sort_values(['user_id', 'transaction_date'], ignore_index=True)

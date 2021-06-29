@@ -1,20 +1,9 @@
-from collections import Counter, OrderedDict
+from collections import Counter
 from functools import wraps
 import re
 
 
-class OrderedCounter(Counter, OrderedDict):
-    """Counter that stores elements in the order they are added."""
-
-    def __repr__(self):
-        return '{}({!r})'.format(self.__class__.__name__, OrderedDict(self))
-
-    def __reduce__(self):
-        return self.__class__, (OrderedDict(self),)
-
-
-count = OrderedCounter()
-
+count = Counter()
 cleaner_funcs = []
 selector_funcs = []
 
