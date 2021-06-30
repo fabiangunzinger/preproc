@@ -3,7 +3,7 @@ import pandas as pd
 from decorators import cleaner
 
 
-@cleaner
+# @cleaner
 def add_variables(df):
     """Create helper variables."""
     y = df.transaction_date.dt.year * 100
@@ -21,7 +21,7 @@ def drop_last_month(df):
     return df[ym < ym.max()]
 
 
-# @cleaner
+@cleaner
 def clean_gender(df):
     """Categorise 'u' as missing."""
     df['gender'] = df.gender.str.replace('u', '')

@@ -6,6 +6,7 @@ import sys
 import aws
 import cleaners
 import decorators
+from read_raw import read_raw
 
 def parse_args(argv):
     parser = argparse.ArgumentParser()
@@ -25,7 +26,7 @@ def main(args=None):
     #todo
     # need to use mdb reader function to preproc var names
 
-    df = aws.s3read_csv(args.inpath, sep='|')
+    df = read_raw(args.inpath)
     df = pipeline(df) 
     aws.s3write_parquet(df, args.outpath)
     print(df.head())
