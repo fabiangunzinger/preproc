@@ -6,7 +6,7 @@ import sys
 import aws
 import cleaners
 import decorators
-from read_raw import read_raw
+
 
 def parse_args(argv):
     parser = argparse.ArgumentParser()
@@ -14,20 +14,49 @@ def parse_args(argv):
     parser.add_argument('outpath', help='path to output file')
     return parser.parse_args()
 
-def pipeline(df):
+
+def read(inpath, **kwargs):
+    """Read unprocessed input data.
+
+    Set column types if necessary to save memory.
+    """
+    dtypes = {
+        'Transaction Reference': 'int32',
+        'User Reference': 'int32',
+        'Year of Birth': 'float32',
+        'Account Reference': 'int32',
+        'Latest Balance': 'float32',
+        'Amount': 'float32',
+    }
+
+    dates = [
+        'User Registration Date',
+        'Transaction Date',
+        'Account Created Date',
+        'Account Last Refreshed',
+    ]
+
+    return aws.s3read_csv(inpath,
+                          sep='|',
+                          dtype=dtypes,
+                          parse_dates=dates,
+                          infer_datetime_format=True)
+
+
+def pipeline(inpath):
     functions = decorators.cleaner_funcs
-    return [f(df) for f in functions]
+    df = read(inpath)
+    for f in functions:
+        df = f(df)
+
+    return df
+
 
 def main(args=None):
     if args is None:
         args = sys.argv[1:]
     args = parse_args(args)
-
-    #todo
-    # need to use mdb reader function to preproc var names
-
-    df = read_raw(args.inpath)
-    df = pipeline(df) 
+    df = pipeline(args.inpath) 
     aws.s3write_parquet(df, args.outpath)
     print(df.head())
 
